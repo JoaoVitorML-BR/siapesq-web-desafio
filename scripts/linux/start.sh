@@ -107,4 +107,4 @@ print_green "
 |____/ \___|_|    \_/ \___|__|   |___/\__\__,_|_|   \__\___|\__,_(_)
 "
 
-docker-compose logs -f
+docker-compose logs -
