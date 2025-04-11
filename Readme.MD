@@ -14,7 +14,7 @@ Desenvolva uma REST API utilizando Node, Express framework e Sequelize ORM, impl
 
 ## Iniciando o ambiente
 
-Para iniciar o servidor, basta, acessar a pasta "cd /scripts" via terminal e rodar o comando "source ./start.sh" ou, se preferir, execute no diretorio principal "npm install" e em seguida "docker-compose up --build".
+Para iniciar o servidor, basta, acessar a pasta "cd /scripts" + pasta do seu sistema operacional via terminal e rodar o comando "source ./start.sh" para linux, "bash .\start.sh" para windows, ou, se preferir, execute no diretorio principal "npm install" e em seguida "docker-compose up --build".
 
 -   Obs 1: Caso você rode o comando ./start.sh e der erro de permissão, execute o comando chmod +x start.sh (para Linux Ubuntu).
 
