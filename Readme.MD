@@ -14,11 +14,14 @@ Desenvolva uma REST API utilizando Node, Express framework e Sequelize ORM, impl
 
 ## Iniciando o ambiente
 
-Para iniciar o servidor, basta rodar o comando ./start.sh ou, se preferir, execute npm install e em seguida docker-compose up --build.
+Para iniciar o servidor, basta, acessar a pasta "cd /scripts" via terminal e rodar o comando "source ./start.sh" ou, se preferir, execute no diretorio principal "npm install" e em seguida "docker-compose up --build".
 
 -   Obs 1: Caso você rode o comando ./start.sh e der erro de permissão, execute o comando chmod +x start.sh (para Linux Ubuntu).
 
 -   Obs 2: O arquivo .env será mantido fora do .gitignore para facilitar a criação do ambiente, evitando a necessidade de criar e configurar os dados dele, bem como a geração da chave JWT_SECRET.
+
+- Obs 3: Você deve ter o docker instalado na maquina, caso não tenha, você pode instalar ele através do link:
+  - <a href="https://www.docker.com/get-started/"> Docker </a>
 
 ### Acesso às rotas
 

@@ -1,16 +1,24 @@
+#!/bin/bash
+
+print_color() {
+    local color_code=$1
+    local message=$2
+    echo -e "\033[${color_code}m${message}\033[0m"
+}
+
 print_green() {
-    echo -e "\033[0;32m$1\033[0m"
+    print_color "0;32" "$1"
 }
 
-print_yellow(){
-    echo -e "\033[0;33m$1\033[0m"
+print_yellow() {
+    print_color "0;33" "$1"
 }
 
-print_red(){
-    echo -e "\033[0;31m$1\033[0m"
+print_red() {
+    print_color "0;31" "$1"
 }
 
-print_green ' 
+print_green "
        ____ ___    _    ____  _____ ____   ___        
       / ___|_ _|  / \  |  _ \| ____/ ___| / _ \       
       \___ \| |  / _ \ | |_) |  _| \___ \| | | |      
@@ -20,48 +28,83 @@ print_green '
  _  | | | | |/_\| | | |  \ \ / / | |  | || | | | |_) |
 | |_| | |_| / _ \ |_| |   \ V /  | |  | || |_| |  _ < 
  \___/ \___/_/ \_\___/     \_/  |___| |_| \___/|_| \_\                                       
+"
 
-'
+print_yellow "Verificando o ambiente..."
 
-print_yellow "wait, we are checking the environment..."
+print_red "Atenção às mensagens de erro!"
 
-print_red "stay alert!"
+export $(grep -v '^#' .env | xargs)
 
-git pull
-if [ $? -ne 0 ]; then
-    print_red "Error updating repository!"
+# Função para verificar comandos disponíveis
+check_command() {
+    if ! command -v "$1" &> /dev/null; then
+        print_red "Erro: '$1' não está instalado."
+        exit 1
+    fi
+}
+
+# Verificar comandos necessários
+for cmd in git npm docker docker-compose curl; do
+    check_command "$cmd"
+done
+
+# Atualizar repositório
+print_yellow "Atualizando repositório Git..."
+if ! git pull; then
+    print_red "Erro ao atualizar repositório!"
     exit 1
 fi
 
-# Installing dependencies
-print_yellow "Installing dependencies..."
-npm i
-sleep 3
+# Instalar dependências
+print_yellow "Instalando dependências NPM..."
+if ! npm install; then
+    print_red "Erro ao instalar dependências NPM!"
+    exit 1
+fi
 
-# Fixing vulnerabilities
+# Corrigir vulnerabilidades
+print_yellow "Verificando vulnerabilidades..."
 npm audit fix --force
-sleep 3
 
-# Up docker
-docker-compose up --build -d
-sleep 3
-
-if curl -s http://localhost:3000 > /dev/null; then
-    print_green "
-     ____                                 _             _           _ _ 
-    / ___|  ___ _ ____   _____ _ __   ___| |_ __ _ _ __| |_ ___  __| | |
-    \___ \ / _ \ '__\ \ / / _ \ '__| / __| __/ _` | '__| __/ _ \/ _` | |
-    ___) |  __/  |   \ V /  __ / |   \__ \ || (_| | |  | ||  __/ (_| |_|
-    |____/ \___|_|    \_/ \___|__|   |___/\__\__,_|_|   \__\___|\__,_(_)
-    "
-else
-     print_red "
-     _____                           _             _   _                                            
-    | ____|_ __ _ __ ___  _ __   ___| |_ __ _ _ __| |_(_)_ __   __ _   ___  ___ _ ____   _____ _ __ 
-    |  _| | '__| '__/ _ \| '__| / __| __/ _` | '__| __| | '_ \ / _` | / __|/ _ \ '__\ \ / / _ \ '__|
-    | |___| |  | | | (_) | |    \__ \ || (_| | |  | |_| | | | | (_| | \__ \  __/ |   \ V /  __/ |   
-    |_____|_|  |_|  \___/|_|    |___/\__\__,_|_|   \__|_|_| |_|\__, | |___/\___|_|    \_/ \___|_|   
-                                                            |___/                                
-    "
+# Subir containers Docker
+print_yellow "Iniciando containers Docker..."
+if ! docker-compose up --build -d; then
+    print_red "Erro ao iniciar containers Docker!"
     exit 1
 fi
+
+print_yellow "Aguardando inicialização dos serviços..."
+sleep 3
+
+print_yellow "Aguardando inicialização do banco de dados..."
+until docker exec desafio-siapesq-backend-db-1 mysqladmin ping -h "127.0.0.1" --silent; do
+    print_yellow "Aguardando banco de dados ficar pronto..."
+    sleep 3
+done
+
+# Verificar saúde da aplicação
+print_yellow "Verificando saúde da aplicação..."
+max_retries=10
+retry_count=0
+url="http://localhost:3000"
+
+until curl -s "$url" > /dev/null; do
+    retry_count=$((retry_count + 1))
+    if [ $retry_count -ge $max_retries ]; then
+        print_red "A aplicação não respondeu após $max_retries tentativas."
+        exit 1
+    fi
+    print_yellow "[$retry_count/$max_retries] Aguardando aplicação responder em $url..."
+    sleep 3
+done
+
+print_green "
+ ____                                 _             _           _ _ 
+/ ___|  ___ _ ____   _____ _ __   ___| |_ __ _ _ __| |_ ___  __| | |
+\___ \ / _ \ '__\ \ / / _ \ '__| / __| __/ _ | '__| __/ _ \/ _ | |
+ ___) |  __/  |   \ V /  __ / |   \__ \ || (_| | |  | ||  __/ (_| |_|
+|____/ \___|_|    \_/ \___|__|   |___/\__\__,_|_|   \__\___|\__,_(_)
+"
+
+docker-compose logs -f
