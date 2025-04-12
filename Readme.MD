@@ -112,4 +112,4 @@ Após copiar o token, vamos nos autenticar no Swagger para termos acesso às rot
 
 Em caso de dúvidas sobre o projeto ou uso, segue abaixo o vídeo explicativo sobre o projeto, as tecnologias utilizadas, as escolhas feitas e o funcionamento da aplicação.
 
-<iframe width="420" height="315" src="https://www.youtube.com/watch?v=srNUSsYabis"></iframe>
+[![Assista no YouTube](https://img.youtube.com/vi/srNUSsYabis/0.jpg)](https://www.youtube.com/watch?v=srNUSsYabis)
