@@ -27,7 +27,7 @@ const router = Router();
  *                 type: string
  *               description:
  *                 type: string
- *               image_url:
+ *               file:
  *                 type: file
  *                 format: uri
  *     responses:

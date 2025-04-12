@@ -14,6 +14,8 @@ export default class ItemController {
         try {
             const { name, description } = req.body;
 
+            console.log(req.body, req.file);
+
             const image_url = req.file ? await uploadImage(req.file) : null;
 
             const newItem = await Item.create({

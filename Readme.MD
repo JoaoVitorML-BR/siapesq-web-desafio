@@ -14,7 +14,7 @@ Desenvolva uma REST API utilizando Node, Express framework e Sequelize ORM, impl
 
 ## Iniciando o ambiente
 
-Para iniciar o servidor, basta, acessar a pasta "cd /scripts" + pasta do seu sistema operacional via terminal e rodar o comando "source ./start.sh" para linux, "bash .\start.sh" para windows ou, se preferir, execute no diretorio principal "npm install" e em seguida "docker-compose up --build".
+Para iniciar o servidor, basta acessar a pasta "cd /scripts/linux" via terminal e rodar o comando "source ./start.sh" se o seu sistema operacional for linux. Se você utiliza windows  execute no diretorio principal "npm install" e em seguida "docker-compose up --build". (Linux pode ser executado das 2 formas descritas)
 
 -   Obs 1: Caso você rode o comando ./start.sh e der erro de permissão, execute o comando chmod +x start.sh (para Linux Ubuntu).
 
@@ -111,3 +111,5 @@ Após copiar o token, vamos nos autenticar no Swagger para termos acesso às rot
 ### Video explicativo
 
 Em caso de dúvidas sobre o projeto ou uso, segue abaixo o vídeo explicativo sobre o projeto, as tecnologias utilizadas, as escolhas feitas e o funcionamento da aplicação.
+
+<iframe width="420" height="315" src="https://www.youtube.com/watch?v=srNUSsYabis"></iframe>
